@@ -1,0 +1,17 @@
+Package: SA24204143
+Type: Package
+Title: Karatsuba Algorithm Package
+Version: 1.0
+Date: 2024-12-07
+Author: Cui Yangbo
+Maintainer: Cui Yangbo <768176299@qq.com>
+Description: This R package implements integer and decimal multiplication functions based on the Karatsuba algorithm, accompanied by relevant usage examples and documentation.
+License: GPL (>= 2)
+Imports: Rcpp, microbenchmark, gmp
+Suggests: knitr, rmarkdown
+LinkingTo: Rcpp
+RoxygenNote: 7.3.2
+Encoding: UTF-8
+VignetteBuilder: knitr
+URL: http://github.com/Dear-4ier/SA24204143
+BugReports: http://github.com/Dear-4ier/SA24204143/issues
