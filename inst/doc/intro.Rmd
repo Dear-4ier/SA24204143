@@ -1,0 +1,100 @@
+---
+title: "Function Usage"
+author: "Cui Yangbo"
+date: "2024-12-07"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Function Usage in KaratsubaPack}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# KaratsubaPack 函数使用指南
+
+## Karatsuba 算法简介
+Karatsuba 算法是一种用于高效计算大整数乘法的分治算法。它通过将大整数拆分成较小的部分，递归地执行乘法运算，减少了乘法运算的次数，从而显著提高了计算效率，尤其适用于处理非常大的整数乘法。
+
+Karatsuba 算法能将大整数的乘法计算从复杂度 $O(n^2)$ 降低到 $O(n^{log_23}).$
+
+## `ktimes` 函数
+
+`ktimes` 函数基于 Karatsuba 算法实现了整数乘法功能。以下是对其功能测试及与其他方法比较的示例：
+
+### 大整数乘法测试
+
+```{r include=FALSE}
+library(gmp)
+library(microbenchmark)
+```
+
+```{r}
+library(SA24204143)
+num1 <- "-987654321234567898765432123456789"
+num2 <- "-123456789876567898765432123456789"
+
+# 使用 ktimes 函数计算
+result_ktimes <- ktimes(num1, num2)
+result_ktimes
+# 使用 as.bigz 函数计算
+result_bigz <- as.character((as.bigz(num1) * as.bigz(num2)))
+result_bigz
+# 比较结果
+if (result_ktimes == result_bigz) {
+  print("ktimes 函数计算结果与 as.bigz 函数计算结果一致。")
+} else {
+  print("ktimes 函数计算结果与 as.bigz 函数计算结果不一致。")
+}
+```
+
+### 速度比较
+使用 microbenchmark 包比较 ktimes 函数与 R 内置乘法的速度：
+
+```{r}
+# 生成50到60位数字的函数
+generate_large_number_str <- function() {
+  num_digits <- sample(500:600, 1)  # 随机确定数字的位数
+  first_digit <- sample(1:9, 1)  # 确保首位数字不是0，从1到9里选
+  remaining_digits <- sample(0:9, num_digits - 1, replace = TRUE)  # 生成剩下的位数数字
+  paste0(c(first_digit, remaining_digits), collapse = "")  # 组合成字符串
+}
+
+set.seed(123)
+nums_1 <- replicate(5, generate_large_number_str())
+nums_2 <- replicate(5, generate_large_number_str())
+
+# 进行速度比较
+benchmark_result <- microbenchmark(
+  ktimes = ktimes(nums_1[1], nums_2[1]),
+  builtin_multiply = as.character(as.bigz(nums_1[1]) * as.bigz(nums_2[1])),
+  times = 1000
+)
+
+# 输出比较结果
+print(benchmark_result)
+```
+
+## `fktimes` 函数
+
+fktimes 函数用于处理整数或小数的乘法。
+
+```{r}
+# 定义两个小数
+num3 <- "987654321.234567898765432123456789000"
+num4 <- "0.123456789876567898765432123456789"
+
+# 使用 fktimes 函数计算
+result_fktimes <- fktimes(num3, num4)
+print(result_fktimes)
+```
+
+
+
+
+
+
+
+
+
+
+
+
